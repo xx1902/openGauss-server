@@ -1,5 +1,6 @@
 FROM centos:7.6.1810
 
+COPY CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo
 COPY openGauss-Server-7.0.0-RC3-CentOS7-x86_64.tar.bz2 .
 COPY gosu-amd64 /usr/local/bin/gosu
 
