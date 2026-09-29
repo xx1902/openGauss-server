@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -Eeo pipefail
 
+echo "================================"
+echo " openGauss 课程实验容器启动中"
+echo "================================"
+
 # usage: file_env VAR [DEFAULT]
 #    ie: file_env 'XYZ_DB_PASSWORD' 'example'
 # (will allow for "$XYZ_DB_PASSWORD_FILE" to fill in the value of
