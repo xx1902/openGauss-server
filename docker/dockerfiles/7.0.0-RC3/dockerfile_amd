@@ -1,41 +1,60 @@
 FROM centos:7.6.1810
 
+# 替换 CentOS 7 默认软件源
 COPY CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo
+
+# openGauss 安装包和辅助程序
 COPY openGauss-Server-7.0.0-RC3-CentOS7-x86_64.tar.bz2 .
 COPY gosu-amd64 /usr/local/bin/gosu
 
-ENV LANG en_US.utf8
+# openGauss RC3 需要较新的 LZ4
+COPY lz4/liblz4.so.1.9.3 /usr/lib64/liblz4.so.1.9.3
+
+ENV LANG=en_US.utf8
+ENV GOSU_VERSION=1.12
+ENV PGDATA=/var/lib/opengauss/data
 
 RUN set -eux; \
     yum install -y epel-release && \
-    yum install -y bzip2 bzip2-devel curl libaio openblas-devel && \
+    yum install -y \
+        bzip2 \
+        bzip2-devel \
+        curl \
+        libaio \
+        openblas-devel && \
     groupadd -g 70 omm && \
     useradd -u 70 -g omm -d /home/omm omm && \
+    ln -sf /usr/lib64/liblz4.so.1.9.3 /usr/lib64/liblz4.so.1 && \
+    ldconfig && \
     mkdir -p /var/lib/opengauss && \
     mkdir -p /usr/local/opengauss && \
-    mkdir -p /var/run/opengauss  && \
-    mkdir /docker-entrypoint-initdb.d && \
-    tar -jxf openGauss-Server-7.0.0-RC3-CentOS7-x86_64.tar.bz2 -C /usr/local/opengauss && \
-    chown -R omm:omm /var/run/opengauss && chown -R omm:omm /usr/local/opengauss && chown -R omm:omm /var/lib/opengauss &&  chown -R omm:omm /docker-entrypoint-initdb.d && \
+    mkdir -p /var/run/opengauss && \
+    mkdir -p /docker-entrypoint-initdb.d && \
+    tar -jxf openGauss-Server-7.0.0-RC3-CentOS7-x86_64.tar.bz2 \
+        -C /usr/local/opengauss && \
+    chown -R omm:omm \
+        /var/run/opengauss \
+        /usr/local/opengauss \
+        /var/lib/opengauss \
+        /docker-entrypoint-initdb.d && \
     chmod 2777 /var/run/opengauss && \
-    rm -rf openGauss-Server-7.0.0-RC3-CentOS7-x86_64.tar.bz2 && yum clean all
+    rm -f openGauss-Server-7.0.0-RC3-CentOS7-x86_64.tar.bz2 && \
+    yum clean all
 
 RUN set -eux; \
-    echo "export GAUSSHOME=/usr/local/opengauss"  >> /home/omm/.bashrc && \
-    echo "export PATH=\$GAUSSHOME/bin:\$PATH " >> /home/omm/.bashrc && \
-    echo "export LD_LIBRARY_PATH=\$GAUSSHOME/lib:\$LD_LIBRARY_PATH" >> /home/omm/.bashrc
+    echo "export GAUSSHOME=/usr/local/opengauss" >> /home/omm/.bashrc && \
+    echo 'export PATH=$GAUSSHOME/bin:$PATH' >> /home/omm/.bashrc && \
+    echo 'export LD_LIBRARY_PATH=$GAUSSHOME/lib:$LD_LIBRARY_PATH' >> /home/omm/.bashrc
 
-ENV GOSU_VERSION 1.12
-RUN set -eux; \
-     chmod +x /usr/local/bin/gosu
+RUN chmod +x /usr/local/bin/gosu
 
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 
-ENV PGDATA /var/lib/opengauss/data
-
-COPY entrypoint.sh /usr/local/bin/
-RUN chmod 755 /usr/local/bin/entrypoint.sh;ln -s /usr/local/bin/entrypoint.sh / # backwards compat
+RUN chmod 755 /usr/local/bin/entrypoint.sh && \
+    ln -sf /usr/local/bin/entrypoint.sh /entrypoint.sh
 
 ENTRYPOINT ["entrypoint.sh"]
 
 EXPOSE 5432
+
 CMD ["gaussdb"]
