@@ -13,6 +13,9 @@ COPY lz4/liblz4.so.1.9.3 /usr/lib64/liblz4.so.1.9.3
 ENV LANG=en_US.utf8
 ENV GOSU_VERSION=1.12
 ENV PGDATA=/var/lib/opengauss/data
+ENV GAUSSHOME=/usr/local/opengauss
+ENV PATH=/usr/local/opengauss/bin:/usr/local/bin:/usr/bin:/bin
+ENV LD_LIBRARY_PATH=/usr/local/opengauss/lib:/usr/lib64
 
 RUN set -eux; \
     yum install -y epel-release && \
@@ -21,7 +24,25 @@ RUN set -eux; \
         bzip2-devel \
         curl \
         libaio \
-        openblas-devel && \
+        libatomic \
+        libcgroup \
+        libcgroup-devel \
+        libcurl-devel \
+        libedit \
+        libedit-devel \
+        libxml2 \
+        libxml2-devel \
+        lz4 \
+        lz4-devel \
+        numactl \
+        numactl-devel \
+        openblas-devel \
+        openssl-libs \
+        shadow-utils \
+        tar \
+        unixODBC \
+        unixODBC-devel \
+        zstd && \
     groupadd -g 70 omm && \
     useradd -u 70 -g omm -d /home/omm omm && \
     ln -sf /usr/lib64/liblz4.so.1.9.3 /usr/lib64/liblz4.so.1 && \
