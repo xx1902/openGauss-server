@@ -1,10 +1,6 @@
 #!/usr/bin/env bash
 set -Eeo pipefail
 
-echo "================================"
-echo " openGauss 课程实验容器启动中"
-echo "================================"
-
 # usage: file_env VAR [DEFAULT]
 #    ie: file_env 'XYZ_DB_PASSWORD' 'example'
 # (will allow for "$XYZ_DB_PASSWORD_FILE" to fill in the value of
@@ -408,6 +404,10 @@ _main() {
                         # then restart script as postgres user
                         exec gosu omm "$BASH_SOURCE" "$@"
                 fi
+
+                echo "================================"
+                echo " openGauss 课程实验容器启动中"
+                echo "================================"
 
                 # only run initialization on an empty data directory
                 if [ -z "$DATABASE_ALREADY_EXISTS" ]; then
