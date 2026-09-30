@@ -22,9 +22,14 @@ Datum pgsql_version(PG_FUNCTION_ARGS)
     PG_RETURN_TEXT_P(cstring_to_text(PG_VERSION_STR));
 }
 
+// Datum opengauss_version(PG_FUNCTION_ARGS)
+// {
+//     PG_RETURN_TEXT_P(cstring_to_text(OPENGAUSS_VERSION_NUM_STR)); 
+// }
 Datum opengauss_version(PG_FUNCTION_ARGS)
 {
-    PG_RETURN_TEXT_P(cstring_to_text(OPENGAUSS_VERSION_NUM_STR)); 
+    PG_RETURN_TEXT_P(cstring_to_text(
+        OPENGAUSS_VERSION_NUM_STR " (classroom build~)"));
 }
 
 Datum gs_deployment(PG_FUNCTION_ARGS)
