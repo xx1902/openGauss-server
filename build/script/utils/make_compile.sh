@@ -142,7 +142,7 @@ function install_gaussdb()
     fi
 
     #configure
-    make distclean -sj >> "$LOG_FILE" 2>&1
+    make distclean -sj 2 >> "$LOG_FILE" 2>&1
 
     echo "Begin configure." >> "$LOG_FILE" 2>&1
     chmod 755 configure
@@ -235,12 +235,12 @@ function install_gaussdb()
 
     export GAUSSHOME=${BUILD_DIR}
     export LD_LIBRARY_PATH=${BUILD_DIR}/lib:${BUILD_DIR}/lib/postgresql:${LD_LIBRARY_PATH}
-    make -sj 20 >> "$LOG_FILE" 2>&1
-    make install -sj 8>> "$LOG_FILE" 2>&1
+    make -sj 2 >> "$LOG_FILE" 2>&1
+    make install -sj 2>> "$LOG_FILE" 2>&1
     if [ $? -ne 0 ]; then
-        make install -sj 8>> "$LOG_FILE" 2>&1
+        make install -sj 2>> "$LOG_FILE" 2>&1
         if [ $? -ne 0 ]; then
-            make install -sj 8>> "$LOG_FILE" 2>&1
+            make install -sj 2>> "$LOG_FILE" 2>&1
             if [ $? -ne 0 ]; then
                 die "make install failed."
             fi
@@ -249,8 +249,8 @@ function install_gaussdb()
     
     cd "$ROOT_DIR/contrib/pg_upgrade_support"
     make clean >> "$LOG_FILE" 2>&1
-    make -sj >> "$LOG_FILE" 2>&1
-    make install -sj >> "$LOG_FILE" 2>&1
+    make -sj 2 >> "$LOG_FILE" 2>&1
+    make install -sj 2 >> "$LOG_FILE" 2>&1
     echo "End make install MPPDB" >> "$LOG_FILE" 2>&1
 
     ASSESSMENT_DIR=$ROOT_DIR/contrib/assessment
@@ -273,7 +273,7 @@ function install_gaussdb()
     if [ "${make_check}" = 'on' ]; then
         echo "Begin make check MPPDB..." >> "$LOG_FILE" 2>&1
         cd ${PG_REG_TEST_ROOT}
-        make check -sj >> "$LOG_FILE" 2>&1
+        make check -sj 2 >> "$LOG_FILE" 2>&1
         if [ $? -ne 0 ]; then
             die "make check MPPDB failed."
         fi
@@ -320,20 +320,20 @@ function install_gaussdb()
 
     cd "$XLOG_DUMP_DIR"
     make clean >> "$LOG_FILE" 2>&1
-    make -sj >> "$LOG_FILE" 2>&1
-    make install -sj >> "$LOG_FILE" 2>&1
+    make -sj 2 >> "$LOG_FILE" 2>&1
+    make install -sj 2 >> "$LOG_FILE" 2>&1
     echo "End make install xlog_dump" >> "$LOG_FILE" 2>&1
 
     cd "$PAGE_HACK_DIR"
     make clean >> "$LOG_FILE" 2>&1
-    make -sj >> "$LOG_FILE" 2>&1
-    make install -sj >> "$LOG_FILE" 2>&1
+    make -sj 2 >> "$LOG_FILE" 2>&1
+    make install -sj 2 >> "$LOG_FILE" 2>&1
     echo "End make install pagehack" >> "$LOG_FILE" 2>&1
 
     cd "$ARCH_CLEAN_DIR"
     make clean >> "$LOG_FILE" 2>&1
-    make -sj >> "$LOG_FILE" 2>&1
-    make install -sj >> "$LOG_FILE" 2>&1
+    make -sj 2 >> "$LOG_FILE" 2>&1
+    make install -sj 2 >> "$LOG_FILE" 2>&1
     echo "End make install archivecleanup" >> "$LOG_FILE" 2>&1
 
     chmod 444 ${BUILD_DIR}/bin/cluster_guc.conf

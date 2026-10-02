@@ -43,4 +43,4 @@ SELECT data FROM pg_logical_slot_peek_changes('regression_slot', NULL, NULL, 'fo
 SELECT data FROM pg_logical_slot_get_changes('regression_slot', NULL, NULL, 'format-version', '2', 'include-domain-data-type', '1');
 SELECT 'stop' FROM pg_drop_replication_slot('regression_slot');
 
-DROP TABLE test_wal2json_5;
+DROP TABLE test_wal2json_5;

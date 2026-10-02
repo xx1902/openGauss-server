@@ -13,4 +13,4 @@ Datum
 MakeExpandedObjectReadOnlyInternal(Datum d)
 {
     return d;
-}
+}
